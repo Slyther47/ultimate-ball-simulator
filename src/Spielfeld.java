@@ -7,6 +7,6 @@ public class Spielfeld{
         breite = pBreite;
         tiefe = pTiefe;
         untergrund = new GLQuader(0,0,0, breite,20,tiefe);
-        untergrund.setzeTextur("src/img/Marmor.jpg");
+        untergrund.setzeTextur("src/img/race track.jpg");
     }
 }

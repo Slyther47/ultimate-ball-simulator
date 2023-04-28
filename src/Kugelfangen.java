@@ -9,7 +9,7 @@ public class Kugelfangen {
     private Kugel kugel1, kugel2, kugel3;
 
     public Kugelfangen() {
-        kamera = new GLKamera();
+        kamera = new GLEntwicklerkamera();
         kamera.setzePosition(0, 500, 800);
 
         licht = new GLLicht();
