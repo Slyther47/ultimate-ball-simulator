@@ -10,6 +10,7 @@ public class Box {
         quader.setzeFarbe(0, 0, 0);
     }
 
+
     public void bewegeLinks() {
         if (quader.gibX() > -455) {
             quader.verschiebe(-2, 0, 0);
@@ -34,3 +35,6 @@ public class Box {
         return quader.gibZ();
     }
 }
+
+
+
