@@ -6,11 +6,15 @@ public class Kugel{
 
     private double radius;
     private boolean istAktiv;
-    private double a,b,d,f, a1,b1,d1;
+    private double a,b,d,f,g, rand1;
     private double speed;
+    private int index;
+    Kugel[] kugeln;
 
-    public Kugel(int pRadius,Spielfeld pFeld,Box pBox, double pspeed){
+    public Kugel(int pRadius,Spielfeld pFeld,Box pBox, double pspeed, int pindex){
         speed = pspeed;
+        index= pindex;
+
         if(Math.random()<0.5){
             a=1;
             f=1;
@@ -20,51 +24,88 @@ public class Kugel{
         }
         feld=pFeld;
         dieBox=pBox;
-        kugel = new GLKugel(Math.random()*400*a,40,Math.random()*400*f,pRadius);
+        kugel = new GLKugel(Math.random()*500*a,40,Math.random()*500*f,pRadius);
         kugel.setzeFarbe(Math.random(),Math.random(),Math.random());
         radius=pRadius;
     }
     public boolean istGetroffen() {
-        a = (kugel.gibX() - dieBox.gibX());
+        g= (kugel.gibX() - dieBox.gibX());
 
         b = (kugel.gibZ() - dieBox.gibZ());
-        d = Math.sqrt(a * a + b * b);
-        if (d <= 0) {
+        d = Math.sqrt(g * g + b * b);
+        if (d <= radius + 10) {
             return true;
         } else {
             return false;
         }
     }
+    public void istKugelGetroffen() {
+        for (int i = 0; i < kugeln.length; i++) {
+            g = (kugeln[i].gibX() - kugel.gibX());
 
-    public void rolle() {
-        this.bewegeHorizontal();
-        this.bewegeVertikal();
-        if(this.istGetroffen()){
-            kugel.setzeSichtbarkeit(true);
+            b = (kugeln[i].gibZ() - kugel.gibZ());
+            d = Math.sqrt(g * g + b * b);
+            if(i!=index){
+                if (d <= radius * 2-10) {
+                    a=a*-1;
+                    f=f*-1;
+                }
+            }
+        }
+    }
+    public void respawn(double pPos) {
+        kugel.setzePosition(230-pPos, 480, 500);
+        kugel.setzeSelbstleuchten(1,1,1);
+        kugel.skaliere(0.2,0.2,0.2);
+        f=0;
+        a=0;
+        rand1=150;
+    }
+    public void startSpawn() {
+
+        for (int i = 0; i < kugeln.length; i++) {
+            g = (kugeln[i].gibX() - kugel.gibX());
+
+            b = (kugeln[i].gibZ() - kugel.gibZ());
+            d = Math.sqrt(g * g + b * b);
+            if (d <= radius * 2) {
+                kugeln[i].setzePosition(Math.random()*500*a,40,Math.random()*500*f);
+            }
+
+
         }
     }
 
+
+
+
     public void bewegeHorizontal(){
+
         if(kugel.gibX()<= feld.getBreite()/2 && kugel.gibX()>=feld.getBreite()/-2){
             kugel.verschiebe(a * speed, 0, 0);
 
-        }else
+        }else {
             a = -a;
-        kugel.verschiebe(radius*a,0,0);
-        kugel.verschiebe(a*speed,0,0);
+            kugel.verschiebe(8 * a, 0, 0);
 
-        //System.out.println("Inverted");
 
+
+
+        }
 
     }
 
     public void bewegeVertikal(){
-        if(kugel.gibZ()<= feld.getTiefe()/2&&kugel.gibZ()>= feld.getTiefe()/-2){
+
+        if(kugel.gibZ()<= feld.getTiefe()/2+rand1*-1&&kugel.gibZ()>= feld.getTiefe()/-2+rand1*1){
             kugel.verschiebe(0, 0, f * speed);
-        }else
+        }else {
             f = -f;
-        kugel.verschiebe(0,0,radius*f);
-        kugel.verschiebe(0,0,speed*f);
+            kugel.verschiebe(0, 0, radius* f);
+
+
+
+        }
 
     }
 
@@ -74,5 +115,13 @@ public class Kugel{
     public double gibZ() {
         return  kugel.gibZ();
     }
+    public void uebergebeKugeln(Kugel[] pKugel){
+        kugeln = pKugel;
+    }
+    public void setzePosition(double px,double py, double pz){
+        kugel.setzePosition(px,py,pz);
+    }
+    public void setzeSichtbarkeit(boolean ptrue){
+        kugel.setzeSichtbarkeit(ptrue);
+    }
 }
-
