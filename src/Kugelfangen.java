@@ -4,10 +4,12 @@ public class Kugelfangen {
     private GLLicht licht;
     private GLHimmel himmel;
     private GLTastatur tastatur;
+    GLTafel tafel;
     private Spielfeld spielfeld;
     private Box dieBox;
     private Kugel [] kugel;
     private double speed,a,f;
+    int score = 0;
 
     public Kugelfangen() {
         kamera = new GLEntwicklerkamera();
@@ -16,11 +18,13 @@ public class Kugelfangen {
         licht = new GLLicht();
         himmel = new GLHimmel("src/img/Grass.jpg");
         tastatur = new GLTastatur();
-        kugel = new Kugel [5];
+        kugel = new Kugel [10];
         dieBox= new Box();
         speed= Math.random();
+        tafel = new GLTafel(0,40,-550,200,100);
+        tafel.setzeText("Score: "+score,60);
         for(int i = 0; i< kugel.length;i++){
-            kugel[i] = new Kugel(40,spielfeld,dieBox, 5,i);
+            kugel[i] = new Kugel(20,spielfeld,dieBox, 5,i);
         }
         for(int i = 0; i< kugel.length;i++){
             kugel[i].uebergebeKugeln(kugel);
@@ -38,10 +42,14 @@ public class Kugelfangen {
 
         fuehreAus();
     }
-
+    public void updateScore(){
+        for (int i = 0; i < kugel.length; i++) {
+            score += kugel[i].gibScore();
+            kugel[i].setzeScore(0);
+            tafel.setzeText("Score: "+score,60);
+        }
+    }
     public void fuehreAus() {
-
-
 
         for (int i = 0; i < kugel.length; i++) {
             kugel[i].startSpawn();
@@ -49,11 +57,10 @@ public class Kugelfangen {
         }
         while (!tastatur.esc()) {
             Sys.warte(10);
+            updateScore();
             for (int i = 0; i < kugel.length; i++) {
                 kugel[i].istKugelGetroffen();
-                if(kugel[i].istGetroffen()){
-                    kugel[i].respawn(i*40);
-                }
+                kugel[i].istGetroffen();
                 kugel[i].bewegeHorizontal();
                 kugel[i].bewegeVertikal();
 
